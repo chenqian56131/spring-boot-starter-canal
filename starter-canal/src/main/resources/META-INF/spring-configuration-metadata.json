@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "sourceType":"com.xpand.starter.canal.config.CanalConfig",
+      "name": "canal.client.instances",
+      "type": "java.util.Map<java.lang.String,com.xpand.starter.canal.config.CanalConfig.Instance>",
+      "description": "Description for canal.client.host."
+    }
+] }

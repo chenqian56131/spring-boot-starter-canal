@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/canal-test/canal-test.iml" filepath="$PROJECT_DIR$/canal-test/canal-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/starter-canal/starter-canal.iml" filepath="$PROJECT_DIR$/starter-canal/starter-canal.iml" />
+    </modules>
+  </component>
+</project>
