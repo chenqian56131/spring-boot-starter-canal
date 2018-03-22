@@ -63,7 +63,7 @@ public class MyEventListener2 implements DmlCanalEventListener {
 
 ## Config
 | config      |    describe |
-| :------- | --------:|
+| :------- | :-------|
 | canal.client.instances.{destination}.host | canal server host |
 | canal.client.instances.{destination}.port  | canal server port |
 | canal.client.instances.{destination}.batchSize  | size when trying to get messages from server |
