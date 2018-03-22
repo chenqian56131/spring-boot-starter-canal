@@ -60,3 +60,18 @@ public class MyEventListener2 implements DmlCanalEventListener {
 }
 
 ```
+
+## Config
+| config      |    describe |
+| :------- | --------:|
+| canal.client.instances.{destination}.host | canal server host |
+| canal.client.instances.{destination}.port  | canal server port |
+| canal.client.instances.{destination}.batchSize  | size when trying to get messages from server |
+| canal.client.instances.{destination}.acquireInterval  | interval of acquiring the messages |
+| canal.client.instances.{destination}.filter  | client's subscribe-filter |
+| canal.client.instances.{destination}.userName  | user name |
+| canal.client.instances.{destination}.password  | password |
+| canal.client.instances.{destination}.retryCount  | retry count when error occurred such as IoException. |
+
+
+
