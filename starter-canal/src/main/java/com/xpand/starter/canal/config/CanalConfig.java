@@ -58,7 +58,20 @@ public class CanalConfig {
          */
         private int batchSize = 1000;
 
+        /**
+         * filter
+         */
         private String filter;
+
+        /**
+         * retry count when error occurred
+         */
+        private int retryCount = 5;
+
+        /**
+         * interval of the message-acquiring
+         */
+        private long acquireInterval = 1000;
 
         public Instance() {}
 
@@ -108,6 +121,22 @@ public class CanalConfig {
 
         public void setFilter(String filter) {
             this.filter = filter;
+        }
+
+        public int getRetryCount() {
+            return retryCount;
+        }
+
+        public void setRetryCount(int retryCount) {
+            this.retryCount = retryCount;
+        }
+
+        public long getAcquireInterval() {
+            return acquireInterval;
+        }
+
+        public void setAcquireInterval(long acquireInterval) {
+            this.acquireInterval = acquireInterval;
         }
     }
 

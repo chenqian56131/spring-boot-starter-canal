@@ -9,6 +9,8 @@ import com.xpand.starter.canal.client.transfer.AbstractMessageTransponder;
 import com.xpand.starter.canal.config.CanalConfig;
 import com.xpand.starter.canal.event.CanalEventListener;
 import com.xpand.starter.canal.util.BeanUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 
@@ -29,7 +31,12 @@ import java.util.function.Predicate;
  */
 public class SimpleCanalClient extends AbstractCanalClient {
 
+    /**
+     * executor
+     */
     private ThreadPoolExecutor executor;
+
+    private final static Logger logger = LoggerFactory.getLogger(SimpleCanalClient.class);
 
     public SimpleCanalClient(CanalConfig canalConfig) {
         super(canalConfig);
@@ -40,7 +47,7 @@ public class SimpleCanalClient extends AbstractCanalClient {
 
     @Override
     protected void process(CanalConnector connector, String destination, CanalConfig.Instance config) {
-            executor.submit(new MsgTransponder(connector, destination, config));
+        executor.submit(new MsgTransponder(connector, destination, config));
     }
 
     @Override
@@ -67,6 +74,7 @@ public class SimpleCanalClient extends AbstractCanalClient {
         MsgTransponder(CanalConnector connector, String destination, CanalConfig.Instance config) {
             super(connector, destination, config);
             //initialize the listeners
+            logger.info("{}: initializing the listeners....", Thread.currentThread().getName());
             List<CanalEventListener> list = BeanUtil.getBeansOfType(CanalEventListener.class);
             if (list != null) {
                 listeners.addAll(list);
@@ -84,6 +92,10 @@ public class SimpleCanalClient extends AbstractCanalClient {
                         }
                     }
                 }
+            }
+            logger.info("{}: initializing the listeners end.", Thread.currentThread().getName());
+            if (logger.isWarnEnabled() && listeners.isEmpty() && annoListeners.isEmpty()) {
+                logger.warn("{}: No listener found in context! ", Thread.currentThread().getName());
             }
         }
 
@@ -179,9 +191,11 @@ public class SimpleCanalClient extends AbstractCanalClient {
                                     .toArray();
                             method.invoke(point.target, args);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error("{}: Error occurred when invoke the listener's interface! class:{}, method:{}",
+                                    Thread.currentThread().getName(),
+                                    point.target.getClass().getName(), method.getName());
                         }
-            }));
+                    }));
         }
     }
 }
