@@ -25,31 +25,31 @@ public class BeanUtil implements ApplicationContextAware {
     }
 
     public static <T> T getBean(Class<T> clazz) {
-        T obj = null;
+        T obj;
         try {
             obj = applicationContext.getBean(clazz);
         } catch (Exception e) {
-
+            obj = null;
         }
         return obj;
     }
 
     public static <T> List<T> getBeansOfType(Class<T> clazz) {
-        Map<String, T> map = null;
+        Map<String, T> map;
         try {
             map = applicationContext.getBeansOfType(clazz);
         } catch (Exception e) {
-
+            map = null;
         }
         return map == null ? null : new ArrayList<>(map.values());
     }
 
     public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> anno) {
-        Map<String, Object> map = null;
+        Map<String, Object> map;
         try {
             map = applicationContext.getBeansWithAnnotation(anno);
         } catch (Exception e) {
-
+            map = null;
         }
         return map;
     }

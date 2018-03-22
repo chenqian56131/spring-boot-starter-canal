@@ -4,13 +4,9 @@ import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.xpand.starter.canal.client.exception.CanalClientException;
 import com.xpand.starter.canal.config.CanalConfig;
-import com.xpand.starter.canal.util.BeanUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
