@@ -3,18 +3,19 @@ package com.xpand.starter.canal.client;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.xpand.starter.canal.client.exception.CanalClientException;
+import com.xpand.starter.canal.client.transfer.TransponderFactory;
 import com.xpand.starter.canal.config.CanalConfig;
 import org.springframework.util.StringUtils;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Abstract implements of the CanalClient interface
  * It help to initialize the canal connector and so on..
  *
  * @author chen.qian
- * @date 2018/3/16
  */
 public abstract class AbstractCanalClient implements CanalClient {
 
@@ -28,15 +29,24 @@ public abstract class AbstractCanalClient implements CanalClient {
      */
     private CanalConfig canalConfig;
 
-    AbstractCanalClient(CanalConfig canalConfig) {
+
+    /**
+     * TransponderFactory
+     */
+    protected final TransponderFactory factory;
+
+    AbstractCanalClient(CanalConfig canalConfig, TransponderFactory factory) {
+        Objects.requireNonNull(canalConfig, "canalConfig can not be null!");
+        Objects.requireNonNull(canalConfig, "transponderFactory can not be null!");
         this.canalConfig = canalConfig;
+        this.factory = factory;
     }
 
     @Override
     public void start() {
         Map<String, CanalConfig.Instance> instanceMap = getConfig();
         for (Map.Entry<String, CanalConfig.Instance> instanceEntry : instanceMap.entrySet()) {
-            process(processInstanceEntry(instanceEntry), instanceEntry.getKey(), instanceEntry.getValue());
+            process(processInstanceEntry(instanceEntry), instanceEntry);
         }
 
     }
@@ -44,10 +54,9 @@ public abstract class AbstractCanalClient implements CanalClient {
     /**
      * To initialize the canal connector
      * @param connector CanalConnector
-     * @param destination destination
      * @param config config
      */
-    protected abstract void process(CanalConnector connector, String destination, CanalConfig.Instance config);
+    protected abstract void process(CanalConnector connector, Map.Entry<String, CanalConfig.Instance> config);
 
     private CanalConnector processInstanceEntry(Map.Entry<String, CanalConfig.Instance> instanceEntry) {
         CanalConfig.Instance instance = instanceEntry.getValue();
@@ -89,7 +98,7 @@ public abstract class AbstractCanalClient implements CanalClient {
         return running;
     }
 
-    protected void setRunning(boolean running) {
+    private void setRunning(boolean running) {
         this.running = running;
     }
 }

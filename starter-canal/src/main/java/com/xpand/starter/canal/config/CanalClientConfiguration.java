@@ -3,6 +3,7 @@ package com.xpand.starter.canal.config;
 
 import com.xpand.starter.canal.client.CanalClient;
 import com.xpand.starter.canal.client.SimpleCanalClient;
+import com.xpand.starter.canal.client.transfer.MessageTransponders;
 import com.xpand.starter.canal.util.BeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class CanalClientConfiguration {
 
     @Bean
     private CanalClient canalClient() {
-        CanalClient canalClient = new SimpleCanalClient(canalConfig);
+        CanalClient canalClient = new SimpleCanalClient(canalConfig, MessageTransponders.defaultMessageTransponder());
         canalClient.start();
         logger.info("Starting canal client....");
         return canalClient;

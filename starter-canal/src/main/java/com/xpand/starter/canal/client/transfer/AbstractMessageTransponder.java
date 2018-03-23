@@ -3,9 +3,13 @@ package com.xpand.starter.canal.client.transfer;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.protocol.Message;
 import com.alibaba.otter.canal.protocol.exception.CanalClientException;
+import com.xpand.starter.canal.client.ListenerPoint;
 import com.xpand.starter.canal.config.CanalConfig;
+import com.xpand.starter.canal.event.CanalEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Abstract implements of the MessageTransponder interface.
@@ -31,16 +35,35 @@ public abstract class AbstractMessageTransponder implements MessageTransponder {
     protected final String destination;
 
     /**
+     * listeners which are used by implementing the Interface
+     */
+    protected final List<CanalEventListener> listeners = new ArrayList<>();
+
+    /**
+     * listeners which are used by annotation
+     */
+    protected final List<ListenerPoint> annoListeners = new ArrayList<>();
+
+    /**
      * running flag
      */
     private volatile boolean running = true;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractMessageTransponder.class);
 
-    public AbstractMessageTransponder(CanalConnector connector, String destination, CanalConfig.Instance config) {
+    public AbstractMessageTransponder(CanalConnector connector,
+                                      Map.Entry<String, CanalConfig.Instance> config,
+                                      List<CanalEventListener> listeners,
+                                      List<ListenerPoint> annoListeners) {
+        Objects.requireNonNull(connector, "connector can not be null!");
+        Objects.requireNonNull(config, "config can not be null!");
         this.connector = connector;
-        this.destination = destination;
-        this.config = config;
+        this.destination = config.getKey();
+        this.config = config.getValue();
+        if (listeners != null)
+            this.listeners.addAll(listeners);
+        if (annoListeners != null)
+            this.annoListeners.addAll(annoListeners);
     }
 
     @Override
