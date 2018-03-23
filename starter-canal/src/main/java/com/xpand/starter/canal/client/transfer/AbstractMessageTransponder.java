@@ -91,7 +91,7 @@ public abstract class AbstractMessageTransponder implements MessageTransponder {
                 // commit ack
                 connector.ack(batchId);
                 if (logger.isDebugEnabled()) {
-                    logger.debug("{}: Ack message. batchId:", threadName, batchId);
+                    logger.debug("{}: Ack message. batchId:{}", threadName, batchId);
                 }
             } catch (CanalClientException e) {
                 errorCount--;

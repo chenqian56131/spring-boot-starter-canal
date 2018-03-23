@@ -38,14 +38,16 @@ public class DefaultMessageTransponder extends AbstractMessageTransponder {
         List<CanalEntry.Entry> entries = message.getEntries();
         for (CanalEntry.Entry entry : entries) {
             //ignore the transaction operations
-            if (entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
+            if (entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN
+                    || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND
+                    || entry.getEntryType() == CanalEntry.EntryType.HEARTBEAT) {
                 continue;
             }
             CanalEntry.RowChange rowChange;
             try {
                 rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             } catch (Exception e) {
-                throw new CanalClientException("ERROR ## parser of eromanga-event has an error , data:" + entry.toString(),
+                throw new CanalClientException("ERROR ## parser of event has an error , data:" + entry.toString(),
                         e);
             }
             //ignore the ddl operation
@@ -54,17 +56,27 @@ public class DefaultMessageTransponder extends AbstractMessageTransponder {
             }
             for (CanalEntry.RowData rowData : rowChange.getRowDatasList()) {
                 //distribute to listener interfaces
-                if (listeners != null) {
-                    for (CanalEventListener listener : listeners) {
-                        listener.onEvent(rowChange.getEventType(), rowData);
-                    }
-                }
+                distributeByImpl(rowChange.getEventType(), rowData);
                 //distribute to annotation listener interfaces
                 distributeByAnnotation(destination,
                         entry.getHeader().getSchemaName(),
                         entry.getHeader().getTableName(),
                         rowChange.getEventType(),
                         rowData);
+            }
+        }
+    }
+
+    /**
+     * distribute to listener interfaces
+     *
+     * @param eventType eventType
+     * @param rowData rowData
+     */
+    private void distributeByImpl(CanalEntry.EventType eventType, CanalEntry.RowData rowData) {
+        if (listeners != null) {
+            for (CanalEventListener listener : listeners) {
+                listener.onEvent(eventType, rowData);
             }
         }
     }
