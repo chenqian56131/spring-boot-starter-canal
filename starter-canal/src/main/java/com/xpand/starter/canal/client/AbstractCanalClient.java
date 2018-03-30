@@ -8,6 +8,9 @@ import com.xpand.starter.canal.config.CanalConfig;
 import org.springframework.util.StringUtils;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -60,11 +63,24 @@ public abstract class AbstractCanalClient implements CanalClient {
 
     private CanalConnector processInstanceEntry(Map.Entry<String, CanalConfig.Instance> instanceEntry) {
         CanalConfig.Instance instance = instanceEntry.getValue();
-        //use singleConnector
-        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress(instance.getHost(), instance.getPort()),
-                instanceEntry.getKey(),
-                instance.getUserName(),
-                instance.getPassword());
+        CanalConnector connector;
+        if (instance.isClusterEnabled()) {
+            List<SocketAddress> addresses = new ArrayList<>();
+            for (String s : instance.getZookeeperAddress()) {
+                String[] entry = s.split(":");
+                if (entry.length != 2)
+                    throw new CanalClientException("error parsing zookeeper address:" + s);
+                addresses.add(new InetSocketAddress(entry[0], Integer.parseInt(entry[1])));
+            }
+            connector = CanalConnectors.newClusterConnector(addresses, instanceEntry.getKey(),
+                    instance.getUserName(),
+                    instance.getPassword());
+        } else {
+            connector = CanalConnectors.newSingleConnector(new InetSocketAddress(instance.getHost(), instance.getPort()),
+                    instanceEntry.getKey(),
+                    instance.getUserName(),
+                    instance.getPassword());
+        }
         connector.connect();
         if (!StringUtils.isEmpty(instance.getFilter())) {
             connector.subscribe(instance.getFilter());

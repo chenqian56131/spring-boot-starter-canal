@@ -4,8 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author chen.qian
@@ -32,6 +31,17 @@ public class CanalConfig {
      * instance config class
      */
     public static class Instance {
+
+        /**
+         * is cluster-mod
+         */
+        private boolean clusterEnabled;
+
+
+        /**
+         * zookeeper address
+         */
+        private Set<String> zookeeperAddress = new LinkedHashSet<>();
 
         /**
          * canal server host
@@ -74,6 +84,22 @@ public class CanalConfig {
         private long acquireInterval = 1000;
 
         public Instance() {}
+
+        public boolean isClusterEnabled() {
+            return clusterEnabled;
+        }
+
+        public void setClusterEnabled(boolean clusterEnabled) {
+            this.clusterEnabled = clusterEnabled;
+        }
+
+        public Set<String> getZookeeperAddress() {
+            return zookeeperAddress;
+        }
+
+        public void setZookeeperAddress(Set<String> zookeeperAddress) {
+            this.zookeeperAddress = zookeeperAddress;
+        }
 
         public String getHost() {
             return host;
