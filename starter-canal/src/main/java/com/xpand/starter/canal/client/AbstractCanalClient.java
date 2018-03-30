@@ -68,7 +68,10 @@ public abstract class AbstractCanalClient implements CanalClient {
         connector.connect();
         if (!StringUtils.isEmpty(instance.getFilter())) {
             connector.subscribe(instance.getFilter());
+        } else {
+            connector.subscribe();
         }
+
         connector.rollback();
         return connector;
     }
