@@ -66,7 +66,7 @@ public class MyEventListener2 implements DmlCanalEventListener {
 | :------- | :-------|
 | canal.client.instances.{destination}.clusterEnabled | enable cluster mod |
 | canal.client.instances.{destination}.zookeeperAddress | zookeeper address(required when clusterEnabled is true) |
-| canal.client.instances.{destination}.host | canal server host((required when clusterEnabled is false)) |
+| canal.client.instances.{destination}.host | canal server host(required when clusterEnabled is false) |
 | canal.client.instances.{destination}.port  | canal server port (required when clusterEnabled is false)|
 | canal.client.instances.{destination}.batchSize  | size when trying to get messages from server |
 | canal.client.instances.{destination}.acquireInterval  | interval of acquiring the messages |
